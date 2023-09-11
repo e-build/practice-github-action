@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://hanghae-db:3306/hanghae?serverTimezone=UTC&characterEncoding=UTF-8
+    username: application
+    password: 1234qwer
+
+  jpa:
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+
+logging:
+  level:
+    com.example.riririri: INFO

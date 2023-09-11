@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+
+  hanghae-app:
+    container_name: hanghae-app
+    image: hanghae-app:latest
+    build:
+      context: .
+      dockerfile: ./container/app/Dockerfile_prod
+    ports:
+      - "8080:8080"
+    depends_on:
+      hanghae-db:
+        condition: service_healthy
+
+  hanghae-db:
+    container_name: hanghae-db
+    image: mysql:8-debian
+    platform: linux/amd64
+    volumes:
+      - ./container/db/configuration/mysql.conf.d/my.cnf:/etc/mysql/my.cnf
+      - ./container/db/schema/:/docker-entrypoint-initdb.d/
+    env_file:
+      - ./container/db/configuration/mysql.env
+    ports:
+      - "3309:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot", "-ppass" ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
