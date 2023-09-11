@@ -17,8 +17,25 @@ permissions:
   contents: read
 
 jobs:
+  ktlint:
+      name: Check cotlin lint
+      runs-on: ubuntu-latest
+  
+      steps:
+        - name: Clone repo
+          uses: actions/checkout@main
+          with:
+            fetch-depth: 1
+  
+        - name: ktlint
+          uses: ScaCap/action-ktlint@master
+          with:
+            reporter: github-pr-review
+            fail_on_error: true
+            level: warning
+            
   build:
-
+    name: Build artifact
     runs-on: ubuntu-latest
 
     steps:
