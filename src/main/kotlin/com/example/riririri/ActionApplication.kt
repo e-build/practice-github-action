@@ -16,6 +16,7 @@ class ActionApplication(
     @PostConstruct
     fun init() {
         logger.info { hibernateProperties }
+        logger.info { hibernateProperties }
     }
 
 }
