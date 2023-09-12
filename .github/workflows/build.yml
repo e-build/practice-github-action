@@ -46,15 +46,31 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     - name: Execute unit test
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
       with:
         arguments: unitTest
-    - name: Upload unit test result
-    - name: Upload integration test result
+    # - name: Upload unit test result
+    # - name: Upload integration test result
     - name: Execute integeration test
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
       with:
         arguments: integrationTest
+
+  coverage:
+    name: Run coverage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Run jacoco coverage
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
+      with:
+        arguments: jacocoTestReport -x unitTest -x integrationTest
+    # - name: Upload coverage result
 
   build:
     name: Build artifact
@@ -68,6 +84,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
       with:
         arguments: clean build
