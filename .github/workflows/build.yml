@@ -30,6 +30,7 @@ jobs:
         - name: ktlint
           uses: ScaCap/action-ktlint@master
           with:
+            github_token: ${{ secrets.EVERY_TOKEN }}
             reporter: github-pr-review
             fail_on_error: true
             level: warning
