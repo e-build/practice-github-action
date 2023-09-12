@@ -12,6 +12,7 @@ class ActionApplication(
 ){
 
     val logger = KotlinLogging.logger {}
+
     @PostConstruct
     fun init() {
         logger.info { hibernateProperties }
@@ -22,3 +23,5 @@ class ActionApplication(
 fun main(args: Array<String>) {
     runApplication<ActionApplication>(*args)
 }
+
+// lint -> test -> jacoco -> build -> image build -> imgage push to ECR

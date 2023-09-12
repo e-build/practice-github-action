@@ -14,6 +14,7 @@ class Source(
 ) {
 
     @Id
+    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
 
@@ -27,11 +28,11 @@ class Source(
     var validated: Boolean = validated
 
     @CreatedDate
-    @Column(name = "created_at", columnDefinition = "datetime(6) default(now())", nullable = false, updatable = false)
-    var createdAt : LocalDateTime = LocalDateTime.now()
+    @Column(nullable = false, updatable = false)
+    var createdAt: LocalDateTime = LocalDateTime.now()
 
     @LastModifiedDate
-    @Column(name = "modified_at", columnDefinition = "datetime(6) default(now())", nullable = false)
+    @Column(nullable = false)
     var modifiedAt: LocalDateTime = LocalDateTime.now()
 
 }

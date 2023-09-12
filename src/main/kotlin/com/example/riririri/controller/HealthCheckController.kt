@@ -1,4 +1,4 @@
-package com.example.riririri
+package com.example.riririri.controller
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.GetMapping
@@ -12,7 +12,7 @@ class HealthCheckController {
 
     @GetMapping("/health")
     fun healthCheck(): String {
-        return "OK"
+        return "OK : ${version}"
     }
 
 }
