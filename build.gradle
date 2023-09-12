@@ -6,10 +6,15 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.8.22'
     id 'org.jetbrains.kotlin.plugin.spring' version '1.8.22'
     id 'org.jetbrains.kotlin.plugin.jpa' version '1.8.22'
+    id("jacoco")
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
+
+jacoco {
+    toolVersion = "0.8.8"
+}
 
 java {
     sourceCompatibility = '17'
@@ -40,9 +45,43 @@ tasks.withType(KotlinCompile) {
     }
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+tasks.register('unitTest', Test) {
+    useJUnitPlatform {
+        excludeTags 'integration'
+    }
+    jacoco {
+        destinationFile = file("build/jacoco/jacoco-unit.exec")
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    maxHeapSize = "2048m"
 }
+
+tasks.register('integrationTest', Test) {
+    useJUnitPlatform {
+        includeTags 'integration'
+    }
+    jacoco {
+        destinationFile = file("build/jacoco/jacoco-integration.exec")
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    maxHeapSize = "2048m"
+}
+
+jacocoTestReport {
+    dependsOn "unitTest", "integrationTest"
+    reports {
+        xml.required = true
+        html.required = true
+    }
+    afterEvaluate {
+        executionData = files("$buildDir/jacoco/jacoco-unit.exec", "$buildDir/jacoco/jacoco-integration.exec")
+    }
+}
+
 
 jar {
     enabled = false
