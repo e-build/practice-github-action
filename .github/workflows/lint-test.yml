@@ -35,12 +35,14 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - name: Grant execute permission gradlew
-      run: chmod +x gradlew
     - name: Execute unit test
-      run: ./gradlew unitTest
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
+      with:
+        arguments: unitTest
     - name: Execute integeration test
-      run: ./gradlew integrationTest
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
+      with:
+        arguments: integrationTest
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: always()
