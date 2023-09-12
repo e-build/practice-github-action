@@ -1,0 +1,67 @@
+name: Lint And Test with coverage
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  ktlint:
+      name: Check kotlin lint
+      runs-on: ubuntu-latest
+  
+      steps:
+        - name: Clone repo
+          uses: actions/checkout@main
+          with:
+            fetch-depth: 1
+  
+        - name: ktlint
+          uses: ScaCap/action-ktlint@master
+          with:
+            github_token: ${{ secrets.EVERY_TOKEN }}
+            reporter: github-pr-review
+            fail_on_error: true
+            level: warning
+  test:
+    name: Execute test
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Execute unit test
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
+      with:
+        arguments: unitTest
+    - name: Execute integeration test
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
+      with:
+        arguments: integrationTest
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+        junit_files: "build/test-results/**/*.xml"
+
+  coverage:
+    needs: test
+    name: Run coverage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Run jacoco coverage
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
+      with:
+        arguments: jacocoTestReport -x unitTest -x integrationTest
+    # - name: Upload coverage result
