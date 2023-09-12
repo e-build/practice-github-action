@@ -4,7 +4,7 @@ on:
   workflow_run:
     workflows: [Lint And Test with coverage]
     types:
-      - success
+      - completed
 env:
   AWS_REGION: ap-northeast-2
   ECR_REGISTRY: 856195448505.dkr.ecr.ap-northeast-2.amazonaws.com
