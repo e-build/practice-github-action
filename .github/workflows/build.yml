@@ -1,11 +1,4 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
-name: Java CI with Gradle
+name: Lint And Test with coverage
 
 on:
   push:
@@ -45,16 +38,17 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+    - name: Grant execute permission gradlew
+      run: chmod +x gradlew
     - name: Execute unit test
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
-      with:
-        arguments: unitTest
-    # - name: Upload unit test result
-    # - name: Upload integration test result
+      run: ./gradlew unitTest
     - name: Execute integeration test
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
+      run: ./gradlew integrationTest
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
       with:
-        arguments: integrationTest
+        junit_files: "build/test-results/**/*.xml"
 
   coverage:
     needs: test
