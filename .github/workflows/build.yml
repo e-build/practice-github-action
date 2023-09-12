@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   ktlint:
-      name: Check cotlin lint
+      name: Check kotlin lint
       runs-on: ubuntu-latest
   
       steps:
@@ -33,7 +33,26 @@ jobs:
             reporter: github-pr-review
             fail_on_error: true
             level: warning
-            
+  test:
+    name: Execute test
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Execute unit test
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+      with:
+        arguments: unitTest
+    - name: Execute integeration test
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+      with:
+        arguments: integrationTest
+
   build:
     name: Build artifact
     runs-on: ubuntu-latest
