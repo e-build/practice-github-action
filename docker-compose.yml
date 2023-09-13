@@ -6,7 +6,7 @@ services:
     image: hanghae-app:latest
     build:
       context: .
-      dockerfile: ./container/app/Dockerfile_prod
+      dockerfile: container/app/Dockerfile
     ports:
       - "8080:8080"
     depends_on:
