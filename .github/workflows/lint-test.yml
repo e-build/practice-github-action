@@ -8,22 +8,22 @@ on:
 
 jobs:
   ktlint:
-      name: Check kotlin lint
-      runs-on: ubuntu-latest
-  
-      steps:
-        - name: Clone repo
-          uses: actions/checkout@main
-          with:
-            fetch-depth: 1
-  
-        - name: ktlint
-          uses: ScaCap/action-ktlint@master
-          with:
-            github_token: ${{ secrets.EVERY_TOKEN }}
-            reporter: github-pr-review
-            fail_on_error: true
-            level: warning
+    name: Check kotlin lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 1
+
+      - name: ktlint
+        uses: ScaCap/action-ktlint@master
+        with:
+          github_token: ${{ secrets.EVERY_TOKEN }}
+          reporter: github-pr-review
+          fail_on_error: true
+          level: warning
   test:
     name: Execute test
     runs-on: ubuntu-latest
@@ -64,4 +64,14 @@ jobs:
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
       with:
         arguments: jacocoTestReport -x unitTest -x integrationTest
-    # - name: Upload coverage result
+    - name: Register test coverage as a comment in PR
+      id: jacoco
+      uses: madrapps/jacoco-report@v1.6.1
+      with:
+        title: 📝 테스트 커버리지 리포트입니다
+        paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
+        token: ${{ secrets.EVERY_TOKEN }}
+        min-coverage-overall: 50
+        min-coverage-changed-files: 50
+        pass-emoji: ':green_circle:'
+        fail-emoji: ':red_circle:'
